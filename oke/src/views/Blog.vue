@@ -34,7 +34,7 @@
 <script>
   export default{
     data:() => ({
-      apiDomain : "http://demo-api-vue.sanbercloud.com",
+      apiDomain : "https://demo-api-vue.sanbercloud.com",
       blog: {},
     }),
 

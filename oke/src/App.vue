@@ -66,10 +66,10 @@
     </v-list>
 
     <template v-slot:append v-if="!quest">
-      <div class="pas-2">
+      <div class="pa-2">
         <v-btn block color="red" dark @click="logout">
           <v-icon left>mdi-lock</v-icon>
-          Logout
+            Logout
         </v-btn>
       </div>
     </template>
@@ -121,12 +121,13 @@ export default {
       {title:'Blogs', icon: 'mdi-note', route:'/blogs'},
       {title:'About',icon:'mdi-pentagon',route:'/about'},
     ],
-    apiDomain : "http://demo-api-vue.sanbercloud.com",
+    apiDomain : "https://demo-api-vue.sanbercloud.com",
   }),
       computed :{
       ...mapGetters({
         quest: 'auth/quest',
         user : 'auth/user',
+        token: 'auth/token',
     // snackbarStatus : false,
     // snackbarText : 'Anda berhasil login'
       })
@@ -134,12 +135,35 @@ export default {
 
   methods : {
     logout(){
-      this.quest = true
-      this.setAlert ({
-        status : true,
-        color : 'success',
-        text : 'Anda berhasil logout'
-      })
+
+      let config = {
+        method: 'post',
+        url: this.apiDomain + '/api/v2/auth/logout',
+        headers: {
+          'Authorization' : 'Bearer' + this.token,
+        },
+      }
+      this.axios(config)
+        .then(() => {
+          this.setToken('')
+          this.setUser({})
+
+            // this.quest = true
+            this.setAlert ({
+              status : true,
+              color : 'success',
+              text : 'Anda berhasil logout'
+            })
+
+        })
+        .catch((responses)=> {
+          this.setAlert ({
+              status : true,
+              color : 'error',
+              text : responses.data.error
+            })
+        })
+
     },
     login() {
       // this.quest = false,
@@ -152,11 +176,17 @@ export default {
     },
   ...mapActions({
     setAlert : 'alert/set',
-    setDialogComponent : 'dialog/setComponent'
+    setDialogComponent : 'dialog/setComponent',
+    setToken: 'auth/setToken',
+    setUser: 'auth/setUser',
+    checkToken: 'auth/checkToken',
   }),
 },
   mounted(){
-    this.snackbarStatus = true
+    if(this.token){
+      this.checkToken(this.token)
+    }
+    // this.snackbarStatus = true
   }
 };
 </script>

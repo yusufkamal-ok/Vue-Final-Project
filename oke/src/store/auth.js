@@ -1,3 +1,4 @@
+
 import axios from "axios";
 
 export default {
@@ -25,7 +26,7 @@ export default {
             
             let config ={
                 method: 'post',
-                url: 'http://demo-api-vue.sanbercloud.com/api/v2/auth/me',
+                url: 'https://demo-api-vue.sanbercloud.com/api/v2/auth/me',
                 headers: {
                     'Authorization' : 'Bearer' + payload,
                 },
@@ -39,6 +40,10 @@ export default {
                   commit('setUser', {})
                   commit('setToken', '')
               })
+        },
+
+        setUser: ({commit}, payload)=> {
+            commit('setUser',  payload)
         },
     },
     getters: {
